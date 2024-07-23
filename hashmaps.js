@@ -1,8 +1,3 @@
-// whenever access a bucket through an index, throw an error if out of bounds
-// if (index < 0 || index >= buckets.length) {
-//     throw new Error("Trying to access index out of bound");
-// }
-
 class Hashmap {
     constructor(size) {
         this.buckets = [];
@@ -10,6 +5,13 @@ class Hashmap {
         this.capacity = 0;
         for (let i = 0; i < size; i++) {
             this.buckets.push([]);
+        }
+    }
+
+    // whenever access a bucket through an index, throw an error if out of bounds
+    outOfBounds(index) {
+        if (index < 0 || index >= this.buckets.length) {
+            throw new Error('Trying to access index out of bound');
         }
     }
 
@@ -26,6 +28,12 @@ class Hashmap {
         return hashCode;
     }
 
+    // checkSize() {
+    //     if (this.loadFactor * this.capacity >= this.length()) {
+    //         this.resize();
+    //     }
+    // }
+
     set(key, value) {
         const h_key = this.hash(key);
 
@@ -39,6 +47,15 @@ class Hashmap {
             return;
         }
         this.buckets[h_key].append({ key, value });
+    }
+
+    get(key) {
+        const h_key = this.hash(key);
+        if (this.buckets[h_key].contains(key)) {
+            return this.buckets[h_key].contains(key).kvpair.value;
+        } else {
+            return null;
+        }
     }
 }
 
