@@ -122,6 +122,19 @@ class Hashmap {
             return arr;
         }, []);
     }
+
+    entries() {
+        return this.buckets.reduce((arr, bkt) => {
+            if (bkt.length !== 0) {
+                let tmp = bkt.llhead;
+                while (tmp !== null) {
+                    arr.push([tmp.kvpair.key, tmp.kvpair.value]);
+                    tmp = tmp.next;
+                }
+            }
+            return arr;
+        }, []);
+    }
 }
 
 class LinkedList {
@@ -187,7 +200,7 @@ h.set('dog', 'brown');
 h.set('elephant', 'gray');
 h.set('frog', 'green');
 h.set('grape', 'green');
-h.set('gripe', 'purple');
+h.set('grape', 'purple');
 h.set('hat', 'black');
 h.set('ice cream', 'white');
 h.set('jacket', 'blue');
@@ -205,4 +218,4 @@ h.set('kite', 'pink');
 // h.set('lionj', 'golden');
 // h.set('lionk', 'golden');
 // h.set('lionl', 'golden');
-console.log(h.keys(), h.length());
+console.log(h.entries());
