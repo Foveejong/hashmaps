@@ -1,11 +1,8 @@
 class Hashmap {
-    constructor(size) {
-        this.buckets = [];
+    constructor() {
+        this.capacity = 16;
         this.loadFactor = 0.75;
-        this.capacity = 0;
-        for (let i = 0; i < size; i++) {
-            this.buckets.push([]);
-        }
+        this.buckets = Array(this.capacity).fill([]);
     }
 
     // whenever access a bucket through an index, throw an error if out of bounds
@@ -15,24 +12,41 @@ class Hashmap {
         }
     }
 
+    checkSize() {
+        if (this.loadFactor * this.capacity <= this.length()) {
+            this.resize();
+        }
+    }
+
     hash(key) {
         let hashCode = 0;
 
         const primeNumber = 31;
         for (let i = 0; i < key.length; i++) {
             hashCode =
-                (primeNumber * hashCode + key.charCodeAt(i)) %
-                this.buckets.length;
+                (primeNumber * hashCode + key.charCodeAt(i)) % this.capacity;
         }
 
         return hashCode;
     }
 
-    // checkSize() {
-    //     if (this.loadFactor * this.capacity >= this.length()) {
-    //         this.resize();
-    //     }
-    // }
+    resize() {
+        // assign old buckets to new buckets. use new buckets to populate old buckets under new capacity
+        let oldBuckets = this.buckets;
+        this.capacity *= 2;
+        this.buckets = Array(this.capacity).fill([]);
+
+        // for each bucket, loop through and recalc based off new capacity
+        oldBuckets.forEach((bkt) => {
+            if (bkt.length !== 0) {
+                let tmp = bkt.llhead;
+                while (tmp !== null) {
+                    this.set(tmp.kvpair.key, tmp.kvpair.value);
+                    tmp = tmp.next;
+                }
+            }
+        });
+    }
 
     set(key, value) {
         const h_key = this.hash(key);
@@ -40,13 +54,16 @@ class Hashmap {
         // if first node
         if (this.buckets[h_key].length === 0) {
             this.buckets[h_key] = new LinkedList(new Node({ key, value }));
+            this.checkSize();
             return;
         }
         if (this.buckets[h_key].contains(key)) {
             this.buckets[h_key].contains(key).kvpair.value = value;
+            this.checkSize();
             return;
         }
         this.buckets[h_key].append({ key, value });
+        this.checkSize();
     }
 
     get(key) {
@@ -78,6 +95,19 @@ class Hashmap {
             }
         }
         return false;
+    }
+
+    length() {
+        return this.buckets.reduce((sum, bkt) => {
+            if (bkt.length !== 0) {
+                return sum + bkt.size();
+            }
+            return sum;
+        }, 0);
+    }
+
+    clear() {
+        this.buckets.fill([]);
     }
 }
 
@@ -117,6 +147,16 @@ class LinkedList {
         prev.next = tmp.next;
         return true;
     }
+
+    size() {
+        let tmp = this.llhead;
+        let index = 0;
+        while (tmp !== null) {
+            tmp = tmp.next;
+            index++;
+        }
+        return index;
+    }
 }
 
 class Node {
@@ -126,7 +166,7 @@ class Node {
     }
 }
 
-const h = new Hashmap(16);
+const h = new Hashmap();
 h.set('apple', 'red');
 h.set('banana', 'yellow');
 h.set('carrot', 'orange');
@@ -134,10 +174,22 @@ h.set('dog', 'brown');
 h.set('elephant', 'gray');
 h.set('frog', 'green');
 h.set('grape', 'green');
-h.set('grape', 'purple');
+h.set('gripe', 'purple');
 h.set('hat', 'black');
 h.set('ice cream', 'white');
 h.set('jacket', 'blue');
 h.set('kite', 'pink');
 h.set('lion', 'golden');
-console.log(h);
+h.set('liona', 'golden');
+h.set('lionb', 'golden');
+h.set('lionc', 'golden');
+h.set('liond', 'golden');
+h.set('lione', 'golden');
+h.set('lionf', 'golden');
+h.set('liong', 'golden');
+h.set('lionh', 'golden');
+h.set('lioni', 'golden');
+h.set('lionj', 'golden');
+// h.set('lionk', 'golden');
+// h.set('lionl', 'golden');
+console.log(h.length(), h);
