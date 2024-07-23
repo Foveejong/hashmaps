@@ -109,6 +109,19 @@ class Hashmap {
     clear() {
         this.buckets.fill([]);
     }
+
+    keys() {
+        return this.buckets.reduce((arr, bkt) => {
+            if (bkt.length !== 0) {
+                let tmp = bkt.llhead;
+                while (tmp !== null) {
+                    arr.push(tmp.kvpair.key);
+                    tmp = tmp.next;
+                }
+            }
+            return arr;
+        }, []);
+    }
 }
 
 class LinkedList {
@@ -179,17 +192,17 @@ h.set('hat', 'black');
 h.set('ice cream', 'white');
 h.set('jacket', 'blue');
 h.set('kite', 'pink');
-h.set('lion', 'golden');
-h.set('liona', 'golden');
-h.set('lionb', 'golden');
-h.set('lionc', 'golden');
-h.set('liond', 'golden');
-h.set('lione', 'golden');
-h.set('lionf', 'golden');
-h.set('liong', 'golden');
-h.set('lionh', 'golden');
-h.set('lioni', 'golden');
-h.set('lionj', 'golden');
+// h.set('lion', 'golden');
+// h.set('liona', 'golden');
+// h.set('lionb', 'golden');
+// h.set('lionc', 'golden');
+// h.set('liond', 'golden');
+// h.set('lione', 'golden');
+// h.set('lionf', 'golden');
+// h.set('liong', 'golden');
+// h.set('lionh', 'golden');
+// h.set('lioni', 'golden');
+// h.set('lionj', 'golden');
 // h.set('lionk', 'golden');
 // h.set('lionl', 'golden');
-console.log(h.length(), h);
+console.log(h.keys(), h.length());
