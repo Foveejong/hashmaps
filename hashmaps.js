@@ -51,11 +51,33 @@ class Hashmap {
 
     get(key) {
         const h_key = this.hash(key);
-        if (this.buckets[h_key].contains(key)) {
+        if (
+            this.buckets[h_key].length !== 0 &&
+            this.buckets[h_key].contains(key)
+        ) {
             return this.buckets[h_key].contains(key).kvpair.value;
-        } else {
-            return null;
         }
+        return null;
+    }
+
+    has(key) {
+        const h_key = this.hash(key);
+        if (
+            this.buckets[h_key].length !== 0 &&
+            this.buckets[h_key].contains(key)
+        ) {
+            return true;
+        }
+        return false;
+    }
+
+    remove(key) {
+        for (let bkt of this.buckets) {
+            if (bkt.length !== 0 && bkt.removeKey(key)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 
@@ -82,6 +104,18 @@ class LinkedList {
             tmp = tmp.next;
         }
         return tmp || null;
+    }
+
+    removeKey(key) {
+        let tmp = this.llhead;
+        let prev = null;
+        while (tmp !== null && tmp.kvpair.key !== key) {
+            prev = tmp;
+            tmp = tmp.next;
+        }
+        if (tmp === null) return false;
+        prev.next = tmp.next;
+        return true;
     }
 }
 
