@@ -1,4 +1,4 @@
-class Hashmap {
+class Hashset {
     constructor() {
         this.capacity = 16;
         this.loadFactor = 0.75;
@@ -20,7 +20,6 @@ class Hashmap {
 
     hash(key) {
         let hashCode = 0;
-
         const primeNumber = 31;
         for (let i = 0; i < key.length; i++) {
             hashCode =
@@ -41,28 +40,23 @@ class Hashmap {
             if (bkt.length !== 0) {
                 let tmp = bkt.llhead;
                 while (tmp !== null) {
-                    this.set(tmp.kvpair.key, tmp.kvpair.value);
+                    this.set(tmp.key);
                     tmp = tmp.next;
                 }
             }
         });
     }
 
-    set(key, value) {
+    set(key) {
         const h_key = this.hash(key);
 
         // if first node
         if (this.buckets[h_key].length === 0) {
-            this.buckets[h_key] = new LinkedList(new Node({ key, value }));
+            this.buckets[h_key] = new LinkedList(new Node(key));
             this.checkSize();
             return;
         }
-        if (this.buckets[h_key].contains(key)) {
-            this.buckets[h_key].contains(key).kvpair.value = value;
-            this.checkSize();
-            return;
-        }
-        this.buckets[h_key].append({ key, value });
+        this.buckets[h_key].append(key);
         this.checkSize();
     }
 
@@ -72,7 +66,7 @@ class Hashmap {
             this.buckets[h_key].length !== 0 &&
             this.buckets[h_key].contains(key)
         ) {
-            return this.buckets[h_key].contains(key).kvpair.value;
+            return this.buckets[h_key].contains(key).key;
         }
         return null;
     }
@@ -115,20 +109,7 @@ class Hashmap {
             if (bkt.length !== 0) {
                 let tmp = bkt.llhead;
                 while (tmp !== null) {
-                    arr.push(tmp.kvpair.key);
-                    tmp = tmp.next;
-                }
-            }
-            return arr;
-        }, []);
-    }
-
-    entries() {
-        return this.buckets.reduce((arr, bkt) => {
-            if (bkt.length !== 0) {
-                let tmp = bkt.llhead;
-                while (tmp !== null) {
-                    arr.push([tmp.kvpair.key, tmp.kvpair.value]);
+                    arr.push(tmp.key);
                     tmp = tmp.next;
                 }
             }
@@ -142,21 +123,21 @@ class LinkedList {
         this.llhead = llhead;
     }
 
-    append(kvpair) {
+    append(key) {
         if (this.llhead === null) {
-            this.llhead = new Node(kvpair);
+            this.llhead = new Node(key);
             return;
         }
         let tmp = this.llhead;
         while (tmp.next !== null) {
             tmp = tmp.next;
         }
-        tmp.next = new Node(kvpair);
+        tmp.next = new Node(key);
     }
 
     contains(key) {
         let tmp = this.llhead;
-        while (tmp !== null && tmp.kvpair.key !== key) {
+        while (tmp !== null && tmp.key !== key) {
             tmp = tmp.next;
         }
         return tmp || null;
@@ -165,7 +146,7 @@ class LinkedList {
     removeKey(key) {
         let tmp = this.llhead;
         let prev = null;
-        while (tmp !== null && tmp.kvpair.key !== key) {
+        while (tmp !== null && tmp.key !== key) {
             prev = tmp;
             tmp = tmp.next;
         }
@@ -192,37 +173,36 @@ class LinkedList {
 }
 
 class Node {
-    constructor(kvpair, next = null) {
-        this.kvpair = kvpair;
+    constructor(key, next = null) {
+        this.key = key;
         this.next = next;
     }
 }
 
-const h = new Hashmap();
-h.set('apple', 'red');
-h.set('banana', 'yellow');
-h.set('carrot', 'orange');
-h.set('dog', 'brown');
-h.set('elephant', 'gray');
-h.set('frog', 'green');
-h.set('grape', 'green');
-h.set('grape', 'purple');
-h.set('hat', 'black');
-h.set('ice cream', 'white');
-h.set('jacket', 'blue');
-h.set('kite', 'pink');
-// h.set('lion', 'golden');
-// h.set('liona', 'golden');
-// h.set('lionb', 'golden');
-// h.set('lionc', 'golden');
-// h.set('liond', 'golden');
-// h.set('lione', 'golden');
-// h.set('lionf', 'golden');
-// h.set('liong', 'golden');
-// h.set('lionh', 'golden');
-// h.set('lioni', 'golden');
-// h.set('lionj', 'golden');
-// h.set('lionk', 'golden');
-// h.set('lionl', 'golden');
-h.remove('ice cream');
-console.log(h);
+const h = new Hashset();
+h.set('apple');
+h.set('banana');
+h.set('carrot');
+h.set('dog');
+h.set('elephant');
+h.set('frog');
+h.set('grape');
+h.set('grape');
+h.set('hat');
+h.set('ice cream');
+h.set('jacket');
+// h.set('kite');
+// h.set('lion');
+// h.set('liona');
+// h.set('lionb');
+// h.set('lionc');
+// h.set('liond');
+// h.set('lione');
+// h.set('lionf');
+// h.set('liong');
+// h.set('lionh');
+// h.set('lioni');
+// h.set('lionj');
+// h.set('lionk');
+// h.set('lionl');
+console.log(h.remove('ice cream'));
